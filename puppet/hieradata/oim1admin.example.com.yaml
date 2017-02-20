@@ -1,0 +1,207 @@
+---
+
+orawls::weblogic::log_output:   true
+
+wls_os_user:              &wls_os_user              "oracle"
+wls_weblogic_user:        &wls_weblogic_user        "weblogic"
+wls_weblogic_home_dir:    &wls_weblogic_home_dir    "/opt/oracle/middleware11g/wlserver_10.3"
+wls_middleware_home_dir:  &wls_middleware_home_dir  "/opt/oracle/middleware11g"
+wls_oracle_base_home_dir: &wls_oracle_base_home_dir "/opt/oracle"
+
+
+# when you have just one domain on a server
+domain_name:                &domain_name                "oimDomain"
+domain_adminserver:         &domain_adminserver         "AdminServer"
+domain_adminserver_port:    &domain_adminserver_port    7001
+domain_nodemanager_port:    &domain_nodemanager_port    5556
+domain_wls_password:        &domain_wls_password        "weblogic1"
+
+# when you have just one domain on a server
+domain_adminserver_address: &domain_adminserver_address  "10.10.10.61"
+domain_user_config_file:    "/home/oracle/oracle-oimDomain-WebLogicConfig.properties"
+domain_user_key_file:       "/home/oracle/oracle-oimDomain-WebLogicKey.properties"
+
+
+orautils::os_domain_typeParam: "oim"
+orautils::os_domain:           *domain_name
+orautils::os_domain_path:      "/opt/oracle/wlsdomains/domains/oimDomain"
+orautils::node_mgr_path:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+orautils::node_mgr_address:    '10.10.10.61'
+orautils::wls_password:        *domain_wls_password
+orautils::wls_adminserver:     *domain_adminserver
+
+wls_log_dir:              &wls_log_dir              "/var/log/weblogic"
+
+wls_domains_dir:          &wls_domains_dir          '/opt/oracle/wlsdomains/domains'
+wls_apps_dir:             &wls_apps_dir             '/opt/oracle/wlsdomains/applications'
+
+wls_jsse_enabled:         &wls_jsse_enabled         true
+
+
+logoutput:                &logoutput                true
+
+# FMW installation on top of WebLogic 10.3.6
+fmw_installations:
+  'oim11.1.2.3':
+    fmw_product:             "oim"
+    fmw_file1:               "ofm_iam_generic_11.1.2.3.0_disk1_1of3.zip"
+    fmw_file2:               "ofm_iam_generic_11.1.2.3.0_disk1_2of3.zip"
+    fmw_file3:               "ofm_iam_generic_11.1.2.3.0_disk1_3of3.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+  'webTierPS7':
+    fmw_product:             "web"
+    fmw_file1:               "ofm_webtier_linux_11.1.1.9.0_64_disk1_1of1.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+  'soaPS7':
+    fmw_product:             "soa"
+    fmw_file1:               "V75849-01_1of2.zip"
+    fmw_file2:               "V75849-01_2of2.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+  'webGate11.1.2.3':
+    version:                 1112
+    fmw_product:             "webgate"
+    fmw_file1:               "ofm_webgates_generic_11.1.2.3.0_disk1_1of1.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+    require:                 Orawls::Fmw[webTierPS7]
+
+# opatch_instances:
+
+
+# create a standard domain
+domain_instances:
+  'oimDomain':
+    version:                  1112
+    domain_template:          "oim"
+    development_mode:         true
+    repository_database_url:  "jdbc:oracle:thin:@oimdb.example.com:1521/oimrepos.example.com"
+    repository_prefix:        "DEV"
+    repository_password:      "Welcome01"
+    repository_sys_password:  "Welcome01"
+    rcu_database_url:         "oimdb.example.com:1521/oimrepos.example.com"
+    adminserver_address:      *domain_adminserver_address
+    weblogic_password:        *domain_wls_password
+    domain_name:              *domain_name
+    jsse_enabled:             *wls_jsse_enabled
+
+
+# create and startup the nodemanager
+nodemanager_instances:
+  'nodemanager':
+     nodemanager_address:  *domain_adminserver_address
+     log_output:           *logoutput
+     domain_name:          *domain_name
+     jsse_enabled:         *wls_jsse_enabled
+
+wls_setting_instances:
+  'default':
+    user:                         *wls_os_user
+    weblogic_home_dir:            *wls_weblogic_home_dir
+    connect_url:                  "t3://%{hiera('domain_adminserver_address')}:7001"
+    weblogic_user:                *wls_weblogic_user
+    weblogic_password:            *domain_wls_password
+    require:                      Orawls::Domain[oimDomain]
+    debug_module:                 true
+    archive_path:                 '/var/tmp/install/default_domain'
+    use_default_value_when_empty: true
+
+# startup adminserver for extra configuration
+control_instances:
+  'startWLSAdminServer':
+     domain_name:          *domain_name
+     server_type:          'admin'
+     target:               'Server'
+     server:               *domain_adminserver
+     action:               'start'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password                 
+     jsse_enabled:         *wls_jsse_enabled
+
+control_managed_instances:
+  'startWLSSoaServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'soa_server1'
+     action:               'start'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password                 
+     jsse_enabled:         *wls_jsse_enabled
+  'startWLSOimServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'oim_server1'
+     action:               'start'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password                 
+     jsse_enabled:         *wls_jsse_enabled
+  'startWLSOamServer':
+     domain_name:          *domain_name
+     server_type:          'managed'
+     target:               'Server'
+     server:               'oam_server1'
+     action:               'start'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password                 
+     jsse_enabled:         *wls_jsse_enabled
+ 
+fmwlogdir_instances:
+  'AdminServer':
+     server:               *domain_adminserver
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password
+     log_dir:              *wls_log_dir     
+  'soa_server1':
+     server:              'soa_server1'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password
+     log_dir:              *wls_log_dir     
+  'oim_server1':
+     server:              'oim_server1'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password
+     log_dir:              *wls_log_dir     
+  'oam_server1':
+     server:              'oam_server1'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password
+     log_dir:              *wls_log_dir     
+
+# create password file for WLST utility
+userconfig_instances:
+  'oimDomain':
+     domain_name:          *domain_name
+     user_config_dir:      '/home/oracle'
+     weblogic_password:    *domain_wls_password
+     adminserver_address:  *domain_adminserver_address  
+
+oimconfig_instances:
+  'oimDomain':
+    version:                    1112
+    oim_home:                   '/opt/oracle/middleware11g/Oracle_IDM1'
+    server_config:              true
+    oim_password:               'Welcome01'
+    remote_config:              false
+    keystore_password:          'Welcome01'
+    design_config:              false
+    oimserver_hostname:         'oim1admin.example.com'
+    oimserver_port:             14000
+    repository_database_url:    "oimdb.example.com:1521:oimrepos.example.com"
+    repository_prefix:          "DEV"
+    repository_password:        "Welcome01"
+    domain_name:                *domain_name
+    adminserver_address:        *domain_adminserver_address
+    weblogic_password:          *domain_wls_password                 
+
+webtier_instances:
+  'ohs1':
+    action_name:            'create'
+    instance_name:          'ohs1'
+    webgate_configure:      true
+    webgate_agentname:      'ohs1'
+    webgate_hostidentifier: 'host1'
+    oamadminserverhostname: 'oim1admin.example.com'
+    oamadminserverport:     7001
+    domain_name:             *domain_name
+    adminserver_address:     *domain_adminserver_address
+    weblogic_password:       *domain_wls_password                 

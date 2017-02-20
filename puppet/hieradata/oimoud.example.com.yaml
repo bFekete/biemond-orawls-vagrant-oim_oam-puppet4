@@ -1,0 +1,130 @@
+---
+
+orawls::weblogic::log_output:   true
+
+wls_os_user:              &wls_os_user              "oracle"
+wls_weblogic_user:        &wls_weblogic_user        "weblogic"
+wls_weblogic_home_dir:    &wls_weblogic_home_dir    "/opt/oracle/middleware11g/wlserver_10.3"
+wls_middleware_home_dir:  &wls_middleware_home_dir  "/opt/oracle/middleware11g"
+wls_oracle_base_home_dir: &wls_oracle_base_home_dir "/opt/oracle"
+
+
+
+orautils::os_domain_typeParam: "oud"
+orautils::os_domain:           "oudDomain"
+orautils::os_domain_path:      "/opt/oracle/wlsdomains/domains/oudDomain"
+orautils::node_mgr_path:       "/opt/oracle/middleware11g/wlserver_10.3/server/bin"
+orautils::node_mgr_address:    '10.10.10.71'
+orautils::wls_password:        "weblogic1"
+orautils::wls_adminserver:     "AdminServer"
+orautils::node_mgr_port:       5556
+orautils::wls_user:            "weblogic"
+
+
+logoutput:                     &logoutput                     true
+
+# FMW installation on top of WebLogic 10.3.6
+fmw_installations:
+  'adfPS7':
+    fmw_product:             "adf"
+    fmw_file1:               "V75962-01.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+  'oud11.1.2.3':
+    version:                 1112
+    fmw_product:             "oud"
+    fmw_file1:               "ofm_oud_generic_11.1.2.3.0_disk1_1of1.zip"
+    oracle_base_home_dir:    *wls_oracle_base_home_dir
+
+
+# when you have just one domain on a server
+domain_user_config_file:    &domain_user_config_file    "/home/oracle/oracle-oudDomain-WebLogicConfig.properties"
+domain_user_key_file:       &domain_user_key_file       "/home/oracle/oracle-oudDomain-WebLogicKey.properties"
+
+domain_name:                &domain_name                "oudDomain"
+domain_adminserver:         &domain_adminserver         "AdminServer"
+domain_adminserver_address: &domain_adminserver_address "10.10.10.71"
+domain_adminserver_port:    &domain_adminserver_port    7001
+domain_nodemanager_port:    &domain_nodemanager_port    5556
+domain_wls_password:        &domain_wls_password        "weblogic1"
+
+
+wls_log_dir:              &wls_log_dir              "/var/log/weblogic"
+
+wls_domains_dir:          &wls_domains_dir          '/opt/oracle/wlsdomains/domains'
+wls_apps_dir:             &wls_apps_dir             '/opt/oracle/wlsdomains/applications'
+
+wls_jsse_enabled:         &wls_jsse_enabled         true
+
+
+# create a standard domain
+domain_instances:
+  'oudDomain':
+    version:                  1112
+    domain_template:          "oud"
+    development_mode:         true
+    adminserver_address:      *domain_adminserver_address
+    weblogic_password:        *domain_wls_password
+    domain_name:              *domain_name
+    jsse_enabled:             *wls_jsse_enabled
+    log_dir:                  *wls_log_dir
+
+
+wls_setting_instances:
+  'default':
+    user:                         *wls_os_user
+    weblogic_home_dir:            *wls_weblogic_home_dir
+    connect_url:                  "t3://%{hiera('domain_adminserver_address')}:7001"
+    weblogic_user:                *wls_weblogic_user
+    weblogic_password:            "weblogic1"
+    require:                      Orawls::Domain[oudDomain]
+    debug_module:                 true
+    archive_path:                 '/var/tmp/install/default_domain'
+    use_default_value_when_empty: true
+
+
+# create and startup the nodemanager
+nodemanager_instances:
+  'nodemanager':
+     nodemanager_address:  *domain_adminserver_address
+     domain_name:          *domain_name
+     jsse_enabled:         *wls_jsse_enabled
+
+# startup adminserver for extra configuration
+control_instances:
+  'startWLSAdminServer':
+     domain_name:          *domain_name
+     server_type:          'admin'
+     target:               'Server'
+     server:               'AdminServer'
+     action:               'start'
+     adminserver_address:  *domain_adminserver_address
+     weblogic_password:    *domain_wls_password                 
+     jsse_enabled:         *wls_jsse_enabled
+
+# create password file for WLST utility
+userconfig_instances:
+  'oudDomain':
+     domain_name:          *domain_name
+     log_output:           *logoutput
+     user_config_dir:      '/home/oracle'
+     weblogic_password:    *domain_wls_password
+     adminserver_address:  *domain_adminserver_address                 
+
+
+oudconfig_instances:
+  'instance1':
+    version:                    1112
+    oud_home:                   '/opt/oracle/middleware11g/Oracle_OUD1'
+    oud_instance_name:          'instance1'
+    oud_root_user_password:     'Welcome01'
+    oud_base_dn:                 'dc=example,dc=com'
+    oud_ldap_port:               1389
+    oud_admin_connector_port:    4444
+    oud_ldaps_port:              1636
+
+oud_control_instances:
+  'instance1':
+    oud_instances_home_dir:     '/opt/oracle/oud_instances'
+    oud_instance_name:          'instance1'
+    action:                     'start'
+    log_output:                 *logoutput
