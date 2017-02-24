@@ -1,8 +1,16 @@
 ---
-:backends: yaml
-:yaml:
-  :datadir: /vagrant/puppet/hieradata
-:hierarchy: 
-  - "%{::fqdn}"
-  - "%{::environment}"
-  - common
+version: 5
+
+defaults:
+  datadir: /vagrant/puppet/hieradata
+  data_hash: yaml_data
+
+hierarchy:
+  - name: "Nodes"
+    path: "%{::fqdn}.yaml"
+
+  - name: "environment defaults"
+    path: "%{::environment}.yaml"
+
+  - name: "Common defaults"
+    path: "common.yaml"

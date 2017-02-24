@@ -35,11 +35,11 @@ class os {
   $host_instances = hiera('hosts', {})
   create_resources('host',$host_instances)
 
-  # swap_file::files { 'swap_file':
-  #   ensure       => present,
-  #   swapfilesize => '8 GB',
-  #   swapfile     => '/var/swap.1' 
-  # }
+  swap_file::files { 'swap_file':
+    ensure       => present,
+    swapfilesize => '8 GB',
+    swapfile     => '/data/swap.1' 
+  }
 
   # set the tmpfs
   mount { '/dev/shm':

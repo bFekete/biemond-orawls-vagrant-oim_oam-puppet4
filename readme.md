@@ -7,8 +7,8 @@ Oracle access & identity manager 11.1.2.3
 
 
 ##Details
-- OEL 6.7 vagrant box
-- Puppet 4.4
+- CentOS 6.8 vagrant box
+- Puppet 4.9.2
 - Vagrant >= 1.8
 - Oracle Virtualbox >= 5.0 or VMware fusion >= 6
 
