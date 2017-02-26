@@ -9,12 +9,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oim1admin" , primary: true do |oim1admin|
 
-    oim1admin.vm.box = "centos-6.7-x86_64"
-    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/m2pr3ln3iim1lzo/centos-6.7-x86_64.box"
+    oim1admin.vm.box = "centos-6.8-x86_64"
+    oim1admin.vm.box_url = "https://dl.dropboxusercontent.com/s/7875ao1yenb2gcv/centos-6.8-x86_64.box"
 
     oim1admin.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "centos-6.8-x86_64-vmware"
-      override.vm.box_url = "https://dl.dropboxusercontent.com/s/pr6kdd0nvzcuqg5/centos-6.7-x86_64-vmware.box"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/sfzbfhilc5665io/centos-6.8-x86_64-vmware.box"
     end
 
     oim1admin.vm.hostname = "oim1admin.example.com"
@@ -69,12 +69,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimoud" , primary: true do |oimoud|
 
-    oimoud.vm.box = "centos-6.7-x86_64"
-    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/m2pr3ln3iim1lzo/centos-6.7-x86_64.box"
+    oimoud.vm.box = "centos-6.8-x86_64"
+    oimoud.vm.box_url = "https://dl.dropboxusercontent.com/s/7875ao1yenb2gcv/centos-6.8-x86_64.box"
 
     oimoud.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "centos-6.8-x86_64-vmware"
-      override.vm.box_url = "https://dl.dropboxusercontent.com/s/pr6kdd0nvzcuqg5/centos-6.7-x86_64-vmware.box"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/sfzbfhilc5665io/centos-6.8-x86_64-vmware.box"
     end
 
     oimoud.vm.hostname = "oimoud.example.com"
@@ -125,12 +125,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "oimdb" , primary: true do |oimdb|
 
-    oimdb.vm.box = "centos-6.7-x86_64"
-    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/m2pr3ln3iim1lzo/centos-6.7-x86_64.box"
+    oimdb.vm.box = "centos-6.8-x86_64"
+    oimdb.vm.box_url = "https://dl.dropboxusercontent.com/s/7875ao1yenb2gcv/centos-6.8-x86_64.box"
 
     oimdb.vm.provider :vmware_fusion do |v, override|
       override.vm.box = "centos-6.8-x86_64-vmware"
-      override.vm.box_url = "https://dl.dropboxusercontent.com/s/pr6kdd0nvzcuqg5/centos-6.7-x86_64-vmware.box"
+      override.vm.box_url = "https://dl.dropboxusercontent.com/s/sfzbfhilc5665io/centos-6.8-x86_64-vmware.box"
     end
 
     oimdb.vm.hostname = "oimdb.example.com"

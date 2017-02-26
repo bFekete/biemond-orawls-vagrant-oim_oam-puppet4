@@ -198,7 +198,7 @@ class oradb_11g {
       temp_tablespace           => 'TEMP',
       puppet_download_mnt_point => lookup('oracle_source'),
       remote_file               => true,
-      logoutput                 => true,
+      log_output                => true,
       require                   => Oradb::Dbactions['start oraDb'],
     }
 }
