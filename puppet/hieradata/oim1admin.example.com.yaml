@@ -113,7 +113,7 @@ control_instances:
      server:               *domain_adminserver
      action:               'start'
      adminserver_address:  *domain_adminserver_address
-     weblogic_password:    *domain_wls_password                 
+     weblogic_password:    *domain_wls_password
      jsse_enabled:         *wls_jsse_enabled
 
 control_managed_instances:
@@ -124,7 +124,7 @@ control_managed_instances:
      server:               'soa_server1'
      action:               'start'
      adminserver_address:  *domain_adminserver_address
-     weblogic_password:    *domain_wls_password                 
+     weblogic_password:    *domain_wls_password
      jsse_enabled:         *wls_jsse_enabled
   'startWLSOimServer':
      domain_name:          *domain_name
@@ -133,7 +133,7 @@ control_managed_instances:
      server:               'oim_server1'
      action:               'start'
      adminserver_address:  *domain_adminserver_address
-     weblogic_password:    *domain_wls_password                 
+     weblogic_password:    *domain_wls_password
      jsse_enabled:         *wls_jsse_enabled
   'startWLSOamServer':
      domain_name:          *domain_name
@@ -142,30 +142,30 @@ control_managed_instances:
      server:               'oam_server1'
      action:               'start'
      adminserver_address:  *domain_adminserver_address
-     weblogic_password:    *domain_wls_password                 
+     weblogic_password:    *domain_wls_password
      jsse_enabled:         *wls_jsse_enabled
- 
+
 fmwlogdir_instances:
   'AdminServer':
      server:               *domain_adminserver
      adminserver_address:  *domain_adminserver_address
      weblogic_password:    *domain_wls_password
-     log_dir:              *wls_log_dir     
+     log_dir:              *wls_log_dir
   'soa_server1':
      server:              'soa_server1'
      adminserver_address:  *domain_adminserver_address
      weblogic_password:    *domain_wls_password
-     log_dir:              *wls_log_dir     
+     log_dir:              *wls_log_dir
   'oim_server1':
      server:              'oim_server1'
      adminserver_address:  *domain_adminserver_address
      weblogic_password:    *domain_wls_password
-     log_dir:              *wls_log_dir     
+     log_dir:              *wls_log_dir
   'oam_server1':
      server:              'oam_server1'
      adminserver_address:  *domain_adminserver_address
      weblogic_password:    *domain_wls_password
-     log_dir:              *wls_log_dir     
+     log_dir:              *wls_log_dir
 
 # create password file for WLST utility
 userconfig_instances:
@@ -173,7 +173,7 @@ userconfig_instances:
      domain_name:          *domain_name
      user_config_dir:      '/home/oracle'
      weblogic_password:    *domain_wls_password
-     adminserver_address:  *domain_adminserver_address  
+     adminserver_address:  *domain_adminserver_address
 
 oimconfig_instances:
   'oimDomain':
@@ -191,7 +191,7 @@ oimconfig_instances:
     repository_password:        "Welcome01"
     domain_name:                *domain_name
     adminserver_address:        *domain_adminserver_address
-    weblogic_password:          *domain_wls_password                 
+    weblogic_password:          *domain_wls_password
 
 webtier_instances:
   'ohs1':
@@ -204,4 +204,4 @@ webtier_instances:
     oamadminserverport:     7001
     domain_name:             *domain_name
     adminserver_address:     *domain_adminserver_address
-    weblogic_password:       *domain_wls_password                 
+    weblogic_password:       *domain_wls_password

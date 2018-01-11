@@ -38,7 +38,7 @@ class os {
   swap_file::files { 'swap_file':
     ensure       => present,
     swapfilesize => '8 GB',
-    swapfile     => '/data/swap.1' 
+    swapfile     => '/data/swap.1'
   }
 
   # set the tmpfs

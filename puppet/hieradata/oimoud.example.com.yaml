@@ -98,7 +98,7 @@ control_instances:
      server:               'AdminServer'
      action:               'start'
      adminserver_address:  *domain_adminserver_address
-     weblogic_password:    *domain_wls_password                 
+     weblogic_password:    *domain_wls_password
      jsse_enabled:         *wls_jsse_enabled
 
 # create password file for WLST utility
@@ -108,7 +108,7 @@ userconfig_instances:
      log_output:           *logoutput
      user_config_dir:      '/home/oracle'
      weblogic_password:    *domain_wls_password
-     adminserver_address:  *domain_adminserver_address                 
+     adminserver_address:  *domain_adminserver_address
 
 
 oudconfig_instances:

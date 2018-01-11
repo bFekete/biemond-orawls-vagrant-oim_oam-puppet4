@@ -9,7 +9,7 @@ class oradb_os {
   swap_file::files { 'swap_file':
     ensure       => present,
     swapfilesize => '8 GB',
-    swapfile     => '/data/swap.1' 
+    swapfile     => '/data/swap.1'
   }
 
   # set the tmpfs
@@ -93,9 +93,9 @@ class oradb_11g {
   require oradb_os
 
     oradb::installdb{ '11.2_linux-x64':
-      version                   => '11.2.0.4',
-      file                      => 'p13390677_112040_Linux-x86-64',
-      database_type             => 'EE',
+      version                   => '11.2.0.1',
+      file                      => 'linux.x64_11gR2_database',
+      database_type             => 'SE',
       oracle_base               => lookup('oracle_base_dir'),
       oracle_home               => lookup('oracle_home_dir'),
       user_base_dir             => '/home',
@@ -108,26 +108,12 @@ class oradb_11g {
       puppet_download_mnt_point => lookup('oracle_source'),
     }
 
-    oradb::opatchupgrade{'112000_opatch_upgrade':
-        oracle_home               => lookup('oracle_home_dir'),
-        patch_file                => 'p6880880_112000_Linux-x86-64.zip',
-        csi_number                => undef,
-        support_id                => undef,
-        opversion                 => '11.2.0.3.6',
-        user                      => lookup('oracle_os_user'),
-        group                     => lookup('oracle_os_group'),
-        download_dir              => lookup('oracle_download_dir'),
-        puppet_download_mnt_point => lookup('oracle_source'),
-        require                   => Oradb::Installdb['11.2_linux-x64'],
-    }
-
     oradb::net{ 'config net8':
       oracle_home   => lookup('oracle_home_dir'),
       version       => '11.2',
       user          => lookup('oracle_os_user'),
       group         => lookup('oracle_os_group'),
       download_dir  => lookup('oracle_download_dir'),
-      require       => Oradb::Opatchupgrade['112000_opatch_upgrade'],
     }
 
     oradb::listener{'start listener':

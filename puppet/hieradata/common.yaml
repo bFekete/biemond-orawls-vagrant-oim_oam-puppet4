@@ -23,8 +23,8 @@ wls_version:              &wls_version              1036
 wls_os_user:              &wls_os_user              "oracle"
 wls_os_group:             &wls_os_group             "dba"
 wls_download_dir:         &wls_download_dir         "/var/tmp/install"
-wls_source:               &wls_source               "/vagrant"
-# wls_source:               &wls_source               "/software"
+#wls_source:               &wls_source               "/vagrant"
+wls_source:               &wls_source               "/software"
 
 wls_jdk_home_dir:         &wls_jdk_home_dir         "/usr/java/latest"
 wls_log_dir:              &wls_log_dir              "/var/log/weblogic"
@@ -56,10 +56,10 @@ orawls::weblogic::wls_apps_dir:              *wls_apps_dir
 
 
 # patches for WebLogic 10.3.6
-bsu_instances:
-  'S8C2':
-    patch_id:                "S8C2"
-    patch_file:              "p21984589_1036_Generic.zip"
+#bsu_instances:
+#  'S8C2':
+#    patch_id:                "S8C2"
+#    patch_file:              "p21984589_1036_Generic.zip"
 
 
 # handy WebLogic scripts in /opt/scripts/wls
